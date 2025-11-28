@@ -49,7 +49,15 @@ pipeline {
                 sh '''
                     npm install serve
                     node_modules/.bin/serve -s build &
-                    sleep 10
+                    for i in {1..30}; do
+                        if nc -z localhost 3000; then
+                            echo "Server is up!"
+                            break
+                        fi
+
+                        echo "Waiting for server..."
+                        sleep 1
+                    done
                     npx playwright test
                 '''
             }
