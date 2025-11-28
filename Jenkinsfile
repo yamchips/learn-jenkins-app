@@ -58,7 +58,7 @@ pipeline {
                         echo "Waiting for server..."
                         sleep 1
                     done
-                    npx playwright test
+                    npx playwright test --reporter=html
                 '''
             }
         }
