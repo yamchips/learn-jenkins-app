@@ -8,28 +8,6 @@ pipeline {
     }
 
     stages {
-
-        stage('AWS') {
-            agent {
-                docker {
-                    image 'amazon/aws-cli:2.32.11'
-                    args "--entrypoint=''"
-                }
-            }
-            environment {
-                S3_BUCKET_NAME = "learn-jenkins-yamchips"
-            }
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'aws-s3-access-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                    sh'''
-                        aws --version
-                        echo "Hello AWS S3!" > index.html
-                        aws s3 cp index.html s3://$S3_BUCKET_NAME/index.html
-                    '''
-                }
-                
-            }
-        }
         
         stage('Build') {
             agent {
@@ -47,6 +25,27 @@ pipeline {
                     npm run build
                     ls -la
                 '''
+            }
+        }
+
+        stage('AWS') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli:2.32.11'
+                    reuseNode true
+                    args "--entrypoint=''"
+                }
+            }
+            environment {
+                S3_BUCKET_NAME = "learn-jenkins-yamchips"
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws-s3-access-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                    sh'''
+                        aws --version
+                        aws s3 sync build s3://$S3_BUCKET_NAME
+                    '''
+                }
             }
         }
         
