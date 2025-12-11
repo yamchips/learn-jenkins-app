@@ -13,7 +13,7 @@ pipeline {
                 docker {
                     image 'amazon/aws-cli:2.32.11'
                     reuseNode true
-                    args "--entrypoint=''"
+                    args "-u root --entrypoint=''"
                 }
             }
 
@@ -21,11 +21,13 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'aws-s3-access-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh'''
                         aws --version
-                        aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json
+                        yum install jq -y
+                        LATEST_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
+                        echo $LATEST_REVISION
                         aws ecs update-service \
                             --cluster learning-jenkins-app-cluster-prod \
                             --service learn-jenkins-app-service-prod  \
-                            --task-definition learn-jenkins-app-task-definition-prod:2
+                            --task-definition learn-jenkins-app-task-definition-prod:$LATEST_REVISION
                     '''
                 }
             }
