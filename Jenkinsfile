@@ -43,7 +43,7 @@ pipeline {
                 sh'''
                     cat /etc/os-release
                     dnf --showduplicates list docker
-                    dnf install -y docker
+                    dnf install -y docker-25.0.13-1.amzn2023.0.2 
                     docker version
                     docker build -t my-jenkins-app .
                 '''
