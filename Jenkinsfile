@@ -42,6 +42,7 @@ pipeline {
             steps {
                 sh'''
                     cat /etc/os-release
+                    dnf install -y docker
                     docker build -t my-jenkins-app .
                 '''
             }
