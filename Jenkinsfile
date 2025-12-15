@@ -42,7 +42,6 @@ pipeline {
             steps {
                 sh'''
                     cat /etc/os-release
-                    amazon-linux-extras install docker
                     docker build -t my-jenkins-app .
                 '''
             }
