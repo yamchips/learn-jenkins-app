@@ -43,6 +43,7 @@ pipeline {
                 sh'''
                     cat /etc/os-release
                     dnf install -y docker
+                    docker version
                     docker build -t my-jenkins-app .
                 '''
             }
