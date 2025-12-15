@@ -42,6 +42,7 @@ pipeline {
             steps {
                 sh'''
                     cat /etc/os-release
+                    dnf --showduplicates list docker
                     dnf install -y docker
                     docker version
                     docker build -t my-jenkins-app .
