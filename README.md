@@ -1,70 +1,56 @@
-# Learn Jenkins App
+# Jenkins CI/CD Pipeline with AWS ECS Deployment
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository demonstrates a complete CI/CD pipeline built with **Jenkins Pipeline as Code**, Docker, and AWS.
 
-## Available Scripts
+The pipeline builds a simple web application, creates and pushes Docker images to Amazon ECR, and deploys them to Amazon ECS using automated task definition revisions.
 
-In the project directory, you can run:
+The implementation follows a hands-on learning project and includes several real-world improvements and fixes beyond the original course material.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## What This Pipeline Does
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Build**
+   - Install dependencies
+   - Build the application
 
-### `npm test`
+2. **Docker Image Build**
+   - Build a **multi-architecture Docker image** (ARM64 + AMD64)
+   - Push the image to Amazon ECR
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Deploy**
+   - Register a new ECS task definition revision
+   - Update ECS service
+   - Wait for the service to become stable
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Jenkins (Pipeline as Code)
+- Docker & Docker Buildx
+- Git & GitHub
+- AWS CLI
+- Amazon ECR
+- Amazon ECS (Fargate)
+- jq
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Key Improvements Beyond the Course
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Fixed ECS deployment rollback caused by **ARM vs AMD64 architecture mismatch**
+- Implemented **multi-architecture Docker builds** using Buildx in Jenkins
+- Removed sed command to avoid changing version-controlled file directly
+- Dynamically injected image URIs during deployment using `jq`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Detailed explanations of these changes are available in [`NOTES.md`](./NOTES.md).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Certificate
 
-## Learn More
+![Jenkins Certificate](public/Certificate.jpg)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
