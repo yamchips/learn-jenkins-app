@@ -6,7 +6,7 @@
     "containerDefinitions": [
         {
             "name": "learnjenkinsapp-prod",
-            "image": "nginx:1.27-alpine",
+            "image": "IMAGE_URI",
             "portMappings": [
                 {
                     "name": "nginx-80-tip",
@@ -23,5 +23,5 @@
     "networkMode": "awsvpc",
     "memory": "512",
     "cpu": "256",
-    "executionRoleArn": ""
+    "executionRoleArn": "arn:aws:iam::481961344643:role/ecsTaskExecutionRole"
 }

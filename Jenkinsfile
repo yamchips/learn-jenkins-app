@@ -71,8 +71,15 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'aws-s3-access-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh'''
                         aws --version
-                        LATEST_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
-                        echo $LATEST_REVISION
+                        IMAGE_URI="$AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION"
+                        echo "Deploying image: $IMAGE_URI"
+                        jq \
+                            --arg IMAGE_URI "$IMAGE_URI" \
+                            '.containerDefinitions[0].image = $IMAGE_URI' \
+                            aws/task-definition-prod.json \
+                            > aws/task-definition-prod-final.json
+                        LATEST_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod-final.json | jq '.taskDefinition.revision')
+                        echo "Registered task definition revision: $LATEST_REVISION"
                         aws ecs update-service \
                             --cluster $AWS_ECS_CLUSTER \
                             --service $AWS_ECS_SERVICE_PROD  \
